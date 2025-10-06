@@ -95,14 +95,19 @@ public class ExtractConfiguration extends DefaultTask {
     @TaskAction
     public void execute() throws IOException {
 
+        // Parse wpilib classifier to get the path
+        String wpilibPlat = getProject().getExtensions().getByType(WpilibToolsExtension.class).getPlatformMapper().getWpilibClassifier();
+
+        String platPath = wpilibPlat.replace("linux", "linux/").replace("win", "windows/").replace("mac", "macosx/") + "/";
+
         getProject().copy(spec -> {
             spec.into(outputDirectory);
             spec.from(configurations);
 
-            spec.include("**/*.so");
-            spec.include("**/*.so.*");
-            spec.include("**/*.dll");
-            spec.include("**/*.dylib");
+            spec.include(platPath + "**/*.so");
+            spec.include(platPath + "**/*.so.*");
+            spec.include(platPath + "**/*.dll");
+            spec.include(platPath + "**/*.dylib");
 
             spec.exclude("**/*.so.debug");
         });
