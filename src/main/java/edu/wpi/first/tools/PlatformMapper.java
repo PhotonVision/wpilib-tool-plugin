@@ -67,8 +67,6 @@ public class PlatformMapper {
     public String getWpilibClassifier() {
         NativePlatforms platform = getCurrentPlatform();
         switch (platform) {
-            case WIN32:
-                return "windowsx86";
             case WIN64:
                 return "windowsx86-64";
             case WINARM64:
@@ -93,8 +91,6 @@ public class PlatformMapper {
     public String getJavaCppClassifier() {
         NativePlatforms platform = getCurrentPlatform();
         switch (platform) {
-            case WIN32:
-                return "windows-x86";
             case WIN64:
                 return "windows-x86_64";
             case MAC64:
@@ -115,8 +111,6 @@ public class PlatformMapper {
     public String getJavaFxClassifier() {
         NativePlatforms platform = getCurrentPlatform();
         switch (platform) {
-            case WIN32:
-                return "win32";
             case WIN64:
                 return "win";
             case MAC64:
