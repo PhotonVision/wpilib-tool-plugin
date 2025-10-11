@@ -50,6 +50,11 @@ tasks.withType(JavaCompile) {
     options.deprecation = true
 }
 
+tasks.named('pluginUnderTestMetadata') {
+    pluginClasspath.from(tasks.named('jar'))
+    dependsOn(tasks.named('jar'))
+}
+
 wrapper {
     gradleVersion = '8.5'
 }
