@@ -55,6 +55,15 @@ wrapper {
 }
 
 publishing {
+    publications {
+        pluginMarker(MavenPublication) {
+            groupId = 'org.photonvision.tools'
+            artifactId = 'WpilibTools'
+            version = project.version
+
+            from components.java
+        }
+    }
     repositories {
         maven {
             name = "PhotonVision"
