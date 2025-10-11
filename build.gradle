@@ -6,7 +6,7 @@ plugins {
     id "com.gradle.plugin-publish" version "1.3.0"
 }
 
-group 'edu.wpi.first'
+group 'org.photonvision'
 version '2.1.0'
 
 if (project.hasProperty('publishVersion')) {
@@ -27,16 +27,16 @@ java {
 }
 
 gradlePlugin {
-    website = 'https://github.com/wpilibsuite/wpilib-tool-plugin'
-    vcsUrl = 'https://github.com/wpilibsuite/wpilib-tool-plugin'
+    website = 'https://github.com/photonvision/wpilib-tool-plugin'
+    vcsUrl = 'https://github.com/photonvision/wpilib-tool-plugin'
 
     plugins {
         WpilibTools {
-            id = 'edu.wpi.first.WpilibTools'
-            implementationClass = 'edu.wpi.first.tools.WpilibTools'
+            id = 'org.photonvision.tools.WpilibTools'
+            implementationClass = 'org.photonvision.tools.WpilibTools'
             displayName = 'WPILib Gradle Tool Plugin'
             description = 'This plugin provides easy to use JNI support for gradle.'
-            tags = ['groovy', 'jni', 'utils', 'maven', 'frc', 'wpilib']
+            tags = ['groovy', 'jni', 'utils', 'maven', 'frc', 'wpilib', 'photonvision']
         }
     }
 }
@@ -52,4 +52,17 @@ tasks.withType(JavaCompile) {
 
 wrapper {
     gradleVersion = '8.5'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "PhotonVision"
+            url = "https://maven.photonvision.org/releases"
+            credentials {
+                username = "ghactions"
+                password = System.getenv("ARTIFACTORY_API_KEY")
+            }
+        }
+    }
 }
