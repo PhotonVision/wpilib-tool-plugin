@@ -56,12 +56,29 @@ wrapper {
 
 publishing {
     publications {
-        pluginMarker(MavenPublication) {
-            groupId = 'org.photonvision.tools'
-            artifactId = 'WpilibTools'
+        // Main plugin artifact
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = project.name
             version = project.version
-
             from components.java
+        }
+        
+        // Plugin marker artifact
+        pluginMarker(MavenPublication) {
+            groupId = 'org.photonvision.tools.WpilibTools'
+            artifactId = 'org.photonvision.tools.WpilibTools.gradle.plugin'
+            version = project.version
+            
+            pom {
+                name = 'WPILib Tools Plugin'
+                description = 'This plugin provides easy to use JNI support for gradle.'
+                
+                // Define the dependency on the main plugin artifact
+                dependencies {
+                    implementation "${project.group}:${project.name}:${project.version}"
+                }
+            }
         }
     }
     repositories {
