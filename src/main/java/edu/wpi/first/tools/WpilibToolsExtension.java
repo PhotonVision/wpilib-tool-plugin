@@ -51,6 +51,9 @@ public class WpilibToolsExtension {
 
         public void addToSourceSetResources(SourceSet sourceSet) {
             Map<String, Object> map = new HashMap<>();
+            String plat = project.getExtensions().getByType(WpilibToolsExtension.class).getPlatformMapper().getWpilibClassifier();
+            plat = plat.replace("windows", "windows/").replace("linux", "linux/").replace("osx", "osx/");
+            assemble.get().exclude("**/*").include("**/*" + plat + "*/**");
             map.put("builtBy", assemble);
             sourceSet.getOutput().dir(map, assemble);
         }
