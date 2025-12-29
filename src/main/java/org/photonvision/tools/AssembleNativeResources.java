@@ -1,7 +1,7 @@
 package org.photonvision.tools;
 
-import org.gradle.api.tasks.Copy;
+import org.gradle.api.tasks.Sync;
 
-public class AssembleNativeResources extends Copy {
+public class AssembleNativeResources extends Sync {
     
 }
