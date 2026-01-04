@@ -11,9 +11,9 @@ import javax.inject.Inject;
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
-import org.gradle.api.file.CopySpec;
 import org.gradle.api.file.Directory;
 import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.SyncSpec;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputDirectory;
@@ -44,10 +44,10 @@ public class FixupNativeResources extends DefaultTask {
     public void execute() {
         Project project = getProject();
 
-        getProject().copy(new Action<CopySpec>() {
+        getProject().sync(new Action<SyncSpec>() {
 
             @Override
-            public void execute(CopySpec copySpec) {
+            public void execute(SyncSpec copySpec) {
                 copySpec.from(inputDirectory);
                 copySpec.into(outputDirectory);
             }

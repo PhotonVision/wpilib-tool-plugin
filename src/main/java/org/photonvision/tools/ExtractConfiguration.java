@@ -95,7 +95,7 @@ public class ExtractConfiguration extends DefaultTask {
     @TaskAction
     public void execute() throws IOException {
 
-        getProject().copy(spec -> {
+        getProject().sync(spec -> {
             spec.into(outputDirectory);
             spec.from(configurations);
 
