@@ -66,65 +66,29 @@ public class PlatformMapper {
 
     public String getWpilibClassifier() {
         NativePlatforms platform = getCurrentPlatform();
-        switch (platform) {
-            case WIN64:
-                return "windowsx86-64";
-            case WINARM64:
-                return "windowsarm64";
-            case MAC64:
-                return "osxuniversal";
-            case MACARM64:
-                return "osxuniversal";
-            case LINUX64:
-                return "linuxx86-64";
-            case LINUXARM64:
-                return "linuxarm64";
-            case LINUXARM32:
-                return "linuxarm32";
-            case LINUXATHENA:
-                return "linuxathena";
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (platform) {
+            case WIN64 -> "windowsx86-64";
+            case WINARM64 -> "windowsarm64";
+            case MAC64 -> "osxuniversal";
+            case MACARM64 -> "osxuniversal";
+            case LINUX64 -> "linuxx86-64";
+            case LINUXARM64 -> "linuxarm64";
+            case LINUXARM32 -> "linuxarm32";
+            case LINUXATHENA -> "linuxathena";
+        };
     }
 
-    public String getJavaCppClassifier() {
+    public String getPlatformPath() {
         NativePlatforms platform = getCurrentPlatform();
-        switch (platform) {
-            case WIN64:
-                return "windows-x86_64";
-            case MAC64:
-                return "macosx-x86_64";
-            case MACARM64:
-                return "macosx-arm64";
-            case LINUX64:
-                return "linux-x86_64";
-            case LINUXARM64:
-                return "linux-arm64";
-            case LINUXARM32:
-                return "linux-armhf";
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    public String getJavaFxClassifier() {
-        NativePlatforms platform = getCurrentPlatform();
-        switch (platform) {
-            case WIN64:
-                return "win";
-            case MAC64:
-                return "mac";
-            case MACARM64:
-                return "mac-aarch64";
-            case LINUX64:
-                return "linux";
-            case LINUXARM64:
-                return "linux-aarch64";
-            case LINUXARM32:
-                return "linux-arm32-monocle";
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (platform) {
+            case WIN64 -> "windows/x86-64";
+            case WINARM64 -> "windows/arm64";
+            case MAC64 -> "osx/universal";
+            case MACARM64 -> "osx/universal";
+            case LINUX64 -> "linux/x86-64";
+            case LINUXARM64 -> "linux/arm64";
+            case LINUXARM32 -> "linux/arm32";
+            case LINUXATHENA -> "linux/athena";
+        };
     }
 }

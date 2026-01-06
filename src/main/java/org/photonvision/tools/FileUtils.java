@@ -8,26 +8,15 @@ import java.util.Objects;
 
 public class FileUtils {
     public static final char EXTENSION_SEPARATOR = '.';
-    private static final char UNIX_SEPARATOR = '/';
-    private static final char WINDOWS_SEPARATOR = '\\';
     public static final int DEFAULT_BUFFER_SIZE = 8192;
     public static final int EOF = -1;
-
-    public static int indexOfLastSeparator(String filename) {
-        if (filename == null) {
-            return -1;
-        }
-        int lastUnixPos = filename.lastIndexOf(UNIX_SEPARATOR);
-        int lastWindowsPos = filename.lastIndexOf(WINDOWS_SEPARATOR);
-        return Math.max(lastUnixPos, lastWindowsPos);
-    }
 
     public static int indexOfExtension(String filename) {
         if (filename == null) {
             return -1;
         }
         int extensionPos = filename.lastIndexOf(EXTENSION_SEPARATOR);
-        int lastSeparator = indexOfLastSeparator(filename);
+        int lastSeparator = filename.lastIndexOf(File.separatorChar);
         return (lastSeparator > extensionPos ? -1 : extensionPos);
     }
 
