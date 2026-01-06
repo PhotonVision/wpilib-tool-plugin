@@ -3,7 +3,7 @@ import org.gradle.internal.os.OperatingSystem;
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
-    id "com.gradle.plugin-publish" version "1.3.0"
+    id "com.gradle.plugin-publish" version "2.0.0"
 }
 
 group 'org.photonvision'
@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.13.2'
 }
 
 java {
@@ -56,7 +56,7 @@ tasks.named('pluginUnderTestMetadata') {
 }
 
 wrapper {
-    gradleVersion = '8.5'
+    gradleVersion = '8.14.2'
 }
 
 publishing {
