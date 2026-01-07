@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'org.photonvision'
-version '2.3.0-photon'
+version '2.3.1-photon'
 
 if (project.hasProperty('publishVersion')) {
     version = project.publishVersion
@@ -56,7 +56,7 @@ tasks.named('pluginUnderTestMetadata') {
 }
 
 wrapper {
-    gradleVersion = '8.14.2'
+    gradleVersion = '8.14.3'
 }
 
 publishing {
