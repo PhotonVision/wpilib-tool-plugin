@@ -62,7 +62,7 @@ public class FixupNativeResources extends DefaultTask {
             if (currentPlat.equals(NativePlatforms.LINUXARM32)) {
                 String localStripCommand = "armv6-bullseye-linux-gnueabihf-strip";
                 try {
-                    project.getProviders().exec(ex -> ex.commandLine(localStripCommand));
+                    project.getProviders().exec(ex -> ex.commandLine(localStripCommand)).getResult().get();
                 } catch (Exception ex) {
                     getLogger().warn("Strip for arm32 was not found. Skipping");
                     return;
@@ -71,7 +71,7 @@ public class FixupNativeResources extends DefaultTask {
             } else if (currentPlat.equals(NativePlatforms.LINUXARM64)) {
                 String localStripCommand = "aarch64-bullseye-linux-gnu-strip";
                 try {
-                    project.getProviders().exec(ex -> ex.commandLine(localStripCommand));
+                    project.getProviders().exec(ex -> ex.commandLine(localStripCommand)).getResult().get();
                 } catch (Exception ex) {
                     getLogger().warn("Strip for arm64 was not found. Skipping");
                     return;
@@ -88,7 +88,8 @@ public class FixupNativeResources extends DefaultTask {
                     continue;
                 }
                 project.getProviders()
-                        .exec(ex -> ex.commandLine(fStripCommand, "--strip-all", "--discard-all", file.toString()));
+                        .exec(ex -> ex.commandLine(fStripCommand, "--strip-all", "--discard-all", file.toString()))
+                        .getResult().get();
             }
         }
 
@@ -104,7 +105,8 @@ public class FixupNativeResources extends DefaultTask {
                 }
 
                 // Strip binaries
-                project.getProviders().exec(ex -> ex.commandLine("strip", "-x", "-S", file.toString()));
+                project.getProviders().exec(ex -> ex.commandLine("strip", "-x", "-S", file.toString())).getResult()
+                        .get();
 
                 // Get list of all dependent binaries
                 ByteArrayOutputStream standardOutput = new ByteArrayOutputStream();
@@ -112,7 +114,7 @@ public class FixupNativeResources extends DefaultTask {
                 project.getProviders().exec(ex -> {
                     ex.commandLine("otool", "-L", file.toString());
                     ex.setStandardOutput(standardOutput);
-                });
+                }).getResult().get();
 
                 filesToFixup.clear();
 
@@ -150,7 +152,7 @@ public class FixupNativeResources extends DefaultTask {
                     project.getProviders().exec(ex -> {
                         ex.commandLine("install_name_tool", "-change", fixupFile, "@loader_path/" + outputNameFinal,
                                 file.toString());
-                    });
+                    }).getResult().get();
                 }
 
                 // Overwrite signature because they were invalidated by strip and
@@ -158,7 +160,7 @@ public class FixupNativeResources extends DefaultTask {
                 project.getProviders().exec(ex -> {
                     ex.commandLine("codesign", "--force", "--sign", "-", file.toString());
                     ex.setStandardOutput(standardOutput);
-                });
+                }).getResult().get();
             }
         }
     }
