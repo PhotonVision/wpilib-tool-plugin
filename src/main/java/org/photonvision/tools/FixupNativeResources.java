@@ -109,16 +109,11 @@ public class FixupNativeResources extends DefaultTask {
                         .get();
 
                 // Get list of all dependent binaries
-                ByteArrayOutputStream standardOutput = new ByteArrayOutputStream();
-
-                project.getProviders().exec(ex -> {
-                    ex.commandLine("otool", "-L", file.toString());
-                    ex.setStandardOutput(standardOutput);
-                }).getResult().get();
+                var exec = project.getProviders().exec(ex -> ex.commandLine("otool", "-L", file.toString()));
 
                 filesToFixup.clear();
 
-                String outputStr = standardOutput.toString();
+                String outputStr = exec.getStandardOutput().getAsText().get();
                 String currentFileName = file.getName();
 
                 // Search dependencies list, look for any non absolute path resolved libraries
@@ -149,18 +144,16 @@ public class FixupNativeResources extends DefaultTask {
                         outputName = outputName.substring("@rpath/".length());
                     }
                     String outputNameFinal = outputName;
-                    project.getProviders().exec(ex -> {
-                        ex.commandLine("install_name_tool", "-change", fixupFile, "@loader_path/" + outputNameFinal,
-                                file.toString());
-                    }).getResult().get();
+                    project.getProviders()
+                            .exec(ex -> ex.commandLine("install_name_tool", "-change", fixupFile,
+                                    "@loader_path/" + outputNameFinal, file.toString()))
+                            .getResult().get();
                 }
 
                 // Overwrite signature because they were invalidated by strip and
                 // install-name-tool.
-                project.getProviders().exec(ex -> {
-                    ex.commandLine("codesign", "--force", "--sign", "-", file.toString());
-                    ex.setStandardOutput(standardOutput);
-                }).getResult().get();
+                project.getProviders().exec(ex -> ex.commandLine("codesign", "--force", "--sign", "-", file.toString()))
+                        .getResult().get();
             }
         }
     }
