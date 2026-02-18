@@ -8,16 +8,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HexFormat;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import com.google.gson.GsonBuilder;
 
-import org.codehaus.groovy.runtime.EncodingGroovyMethods;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.Directory;
 import org.gradle.api.file.DirectoryProperty;
@@ -58,7 +56,7 @@ public class HashNativeResources extends DefaultTask {
 
     @TaskAction
     public void execute() throws NoSuchAlgorithmException, IOException {
-        MessageDigest hash = MessageDigest.getInstance("MD5");
+        MessageDigest combinedHash = MessageDigest.getInstance("MD5");
 
         Directory directory = inputDirectory.get();
 
@@ -76,9 +74,12 @@ public class HashNativeResources extends DefaultTask {
 
             Path path = inputPath.relativize(file.toPath());
 
+            // Compute individual file hash
+            MessageDigest fileHash = MessageDigest.getInstance("MD5");
             try (FileInputStream is = new FileInputStream(file)) {
                 while ((readBytes = is.read(buffer)) != -1) {
-                    hash.update(buffer, 0, readBytes);
+                    fileHash.update(buffer, 0, readBytes);
+                    combinedHash.update(buffer, 0, readBytes);
                 }
             }
 
@@ -86,30 +87,31 @@ public class HashNativeResources extends DefaultTask {
             String arch = path.getName(1).toString();
 
             String strPath = "/" + path.toString().replace("\\", "/");
+            String hexFileHash = HexFormat.of().formatHex(fileHash.digest());
 
             @SuppressWarnings("unchecked") // This will always be the correct type
-            Map<String, List<String>> platformMap = (Map<String, List<String>>)platforms.get(platform);
+            Map<String, Map<String, String>> platformMap = (Map<String, Map<String, String>>)platforms.get(platform);
             if (platformMap == null) {
                 platformMap = new HashMap<>();
-                List<String> archFiles = new ArrayList<>();
-                archFiles.add(strPath);
+                Map<String, String> archFiles = new HashMap<>();
+                archFiles.put(strPath, hexFileHash);
                 platformMap.put(arch, archFiles);
                 platforms.put(platform, platformMap);
             } else {
-                List<String> archFiles = platformMap.get(arch);
+                Map<String, String> archFiles = platformMap.get(arch);
                 if (archFiles == null) {
-                    archFiles = new ArrayList<>();
-                    archFiles.add(strPath);
+                    archFiles = new HashMap<>();
+                    archFiles.put(strPath, hexFileHash);
                     platformMap.put(arch, archFiles);
                 } else {
-                    archFiles.add(strPath);
+                    archFiles.put(strPath, hexFileHash);
                 }
             }
         }
 
         var versions = Files.readAllLines(versionsInput.get().getAsFile().toPath());
 
-        platforms.put("hash", EncodingGroovyMethods.encodeHex(hash.digest()).toString());
+        platforms.put("hash", HexFormat.of().formatHex(combinedHash.digest()));
         platforms.put("versions", versions);
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();

@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'org.photonvision'
-version '2.3.3-photon'
+version '2.4.1-photon'
 
 if (project.hasProperty('publishVersion')) {
     version = project.publishVersion
