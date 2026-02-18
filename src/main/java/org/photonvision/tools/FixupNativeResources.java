@@ -1,6 +1,5 @@
 package org.photonvision.tools;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.List;
 import java.util.Scanner;
