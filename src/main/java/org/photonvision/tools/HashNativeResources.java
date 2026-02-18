@@ -27,6 +27,11 @@ import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 
 public class HashNativeResources extends DefaultTask {
+    
+    record PlatformData(Map<String, Map<String, String>> architectures) {}
+    
+    record HashOutput(Map<String, PlatformData> platforms, String hash, java.util.List<String> versions) {}
+    
     private final DirectoryProperty inputDirectory;
     private final RegularFileProperty hashFile;
     private final RegularFileProperty versionsInput;
@@ -62,7 +67,7 @@ public class HashNativeResources extends DefaultTask {
 
         Path inputPath = directory.getAsFile().toPath();
 
-        Map<String, Object> platforms = new HashMap<>();
+        Map<String, PlatformData> platforms = new HashMap<>();
 
         byte[] buffer = new byte[0xFFFF];
         int readBytes = 0;
@@ -89,20 +94,20 @@ public class HashNativeResources extends DefaultTask {
             String strPath = "/" + path.toString().replace("\\", "/");
             String hexFileHash = HexFormat.of().formatHex(fileHash.digest());
 
-            @SuppressWarnings("unchecked") // This will always be the correct type
-            Map<String, Map<String, String>> platformMap = (Map<String, Map<String, String>>)platforms.get(platform);
-            if (platformMap == null) {
-                platformMap = new HashMap<>();
+            PlatformData platformData = platforms.get(platform);
+            if (platformData == null) {
                 Map<String, String> archFiles = new HashMap<>();
                 archFiles.put(strPath, hexFileHash);
-                platformMap.put(arch, archFiles);
-                platforms.put(platform, platformMap);
+                Map<String, Map<String, String>> architectures = new HashMap<>();
+                architectures.put(arch, archFiles);
+                platforms.put(platform, new PlatformData(architectures));
             } else {
-                Map<String, String> archFiles = platformMap.get(arch);
+                Map<String, Map<String, String>> architectures = platformData.architectures();
+                Map<String, String> archFiles = architectures.get(arch);
                 if (archFiles == null) {
                     archFiles = new HashMap<>();
                     archFiles.put(strPath, hexFileHash);
-                    platformMap.put(arch, archFiles);
+                    architectures.put(arch, archFiles);
                 } else {
                     archFiles.put(strPath, hexFileHash);
                 }
@@ -111,11 +116,12 @@ public class HashNativeResources extends DefaultTask {
 
         var versions = Files.readAllLines(versionsInput.get().getAsFile().toPath());
 
-        platforms.put("hash", HexFormat.of().formatHex(combinedHash.digest()));
-        platforms.put("versions", versions);
+        String hash = HexFormat.of().formatHex(combinedHash.digest());
+        HashOutput output = new HashOutput(platforms, hash, versions);
+        
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
-        var json = builder.create().toJson(platforms);
+        var json = builder.create().toJson(output);
         Files.writeString(hashFile.get().getAsFile().toPath(), json, Charset.defaultCharset());
     }
 }
