@@ -29,15 +29,26 @@ import org.gradle.api.tasks.TaskAction;
 
 public class HashNativeResources extends DefaultTask {
 
-    /** Represents the architecture-specific information containing file hashes. */
+    /**
+     * Architecture-specific information containing file hashes for a specific CPU architecture (e.g.,
+     * x86-64, arm64).
+     */
     public record ArchInfo(Map<String, String> fileHashes) {}
 
-    /** Represents platform-specific information containing architectures. */
+    /**
+     * Platform-specific information containing architectures for a specific OS platform (e.g., linux,
+     * windows).
+     */
     public record PlatformInfo(Map<String, ArchInfo> architectures) {}
 
-    /** Represents the complete resource information structure. */
+    /** Overall resource information to be serialized */
     public record ResourceInformation(
-            String hash, Map<String, PlatformInfo> platforms, List<String> versions) {}
+            // Combined MD5 hash of all native resource files
+            String hash,
+            // Platform-specific native libraries organized by platform then architecture
+            Map<String, PlatformInfo> platforms,
+            // List of supported versions for these native resources
+            List<String> versions) {}
 
     private final DirectoryProperty inputDirectory;
     private final RegularFileProperty hashFile;
