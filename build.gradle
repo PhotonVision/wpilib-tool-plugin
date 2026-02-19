@@ -4,10 +4,11 @@ plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
     id "com.gradle.plugin-publish" version "2.0.0"
+    id "com.diffplug.spotless" version "8.1.0"
 }
 
 group 'org.photonvision'
-version '2.3.3-photon'
+version '2.4.1-photon'
 
 if (project.hasProperty('publishVersion')) {
     version = project.publishVersion
@@ -36,7 +37,15 @@ gradlePlugin {
             implementationClass = 'org.photonvision.tools.WpilibTools'
             displayName = 'WPILib Gradle Tool Plugin'
             description = 'This plugin provides easy to use JNI support for gradle.'
-            tags = ['groovy', 'jni', 'utils', 'maven', 'frc', 'wpilib', 'photonvision']
+            tags = [
+                'groovy',
+                'jni',
+                'utils',
+                'maven',
+                'frc',
+                'wpilib',
+                'photonvision'
+            ]
         }
     }
 }
@@ -59,6 +68,41 @@ wrapper {
     gradleVersion = '8.14.3'
 }
 
+spotless {
+    java {
+        target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**', '**/src/generated/**'
+        }
+        toggleOffOn()
+        googleJavaFormat()
+        leadingSpacesToTabs(2)
+        leadingTabsToSpaces(4)
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    groovyGradle {
+        target fileTree('.') {
+            include '**/*.gradle'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        greclipse()
+        leadingTabsToSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    format 'misc', {
+        target fileTree('.') {
+            include '**/*.md', '**/.gitignore'
+            exclude '**/build/**', '**/build-*/**', '**/node_modules/**'
+        }
+        trimTrailingWhitespace()
+        leadingTabsToSpaces(2)
+        endWithNewline()
+    }
+}
+
 publishing {
     publications {
         // Main plugin artifact
@@ -68,17 +112,17 @@ publishing {
             version = project.version
             from components.java
         }
-        
+
         // Plugin marker artifact
         pluginMarker(MavenPublication) {
             groupId = 'org.photonvision.tools.WpilibTools'
             artifactId = 'org.photonvision.tools.WpilibTools.gradle.plugin'
             version = project.version
-            
+
             pom {
                 name = 'WPILib Tools Plugin'
                 description = 'This plugin provides easy to use JNI support for gradle.'
-                
+
                 // Define the dependency on the main plugin artifact
                 dependencies {
                     implementation "${project.group}:${project.name}:${project.version}"

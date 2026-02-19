@@ -1,5 +1,6 @@
 package org.photonvision.tools;
 
+import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,11 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Inject;
-
-import com.google.gson.GsonBuilder;
-
 import org.codehaus.groovy.runtime.EncodingGroovyMethods;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.Directory;
@@ -88,7 +85,7 @@ public class HashNativeResources extends DefaultTask {
             String strPath = "/" + path.toString().replace("\\", "/");
 
             @SuppressWarnings("unchecked") // This will always be the correct type
-            Map<String, List<String>> platformMap = (Map<String, List<String>>)platforms.get(platform);
+            Map<String, List<String>> platformMap = (Map<String, List<String>>) platforms.get(platform);
             if (platformMap == null) {
                 platformMap = new HashMap<>();
                 List<String> archFiles = new ArrayList<>();
