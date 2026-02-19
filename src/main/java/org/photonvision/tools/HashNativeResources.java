@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HexFormat;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import org.gradle.api.DefaultTask;
@@ -35,8 +36,9 @@ public class HashNativeResources extends DefaultTask {
     public record PlatformInfo(Map<String, ArchInfo> architectures) {}
 
     /** Represents the complete resource information structure. */
-    public record ResourceInformation(String hash, Map<String, PlatformInfo> platforms) {}
-    
+    public record ResourceInformation(
+            String hash, Map<String, PlatformInfo> platforms, List<String> versions) {}
+
     private final DirectoryProperty inputDirectory;
     private final RegularFileProperty hashFile;
     private final RegularFileProperty versionsInput;
@@ -117,8 +119,10 @@ public class HashNativeResources extends DefaultTask {
         }
 
         String hash = HexFormat.of().formatHex(combinedHash.digest());
-        ResourceInformation output = new ResourceInformation(hash, platforms);
-        
+
+        List<String> versions = Files.readAllLines(versionsInput.get().getAsFile().toPath());
+        ResourceInformation output = new ResourceInformation(hash, platforms, versions);
+
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         var json = builder.create().toJson(output);
