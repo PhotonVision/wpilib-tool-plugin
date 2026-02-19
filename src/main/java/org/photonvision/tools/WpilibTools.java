@@ -11,15 +11,23 @@ import org.gradle.api.Project;
 public class WpilibTools implements Plugin<Project> {
     @Override
     public void apply(Project project) {
-        project.getDependencies().registerTransform(UnzipTransform.class, transform -> {
-           transform.getFrom().attribute(ARTIFACT_TYPE_ATTRIBUTE, ZIP_TYPE);
-           transform.getTo().attribute(ARTIFACT_TYPE_ATTRIBUTE, DIRECTORY_TYPE);
-        });
+        project
+                .getDependencies()
+                .registerTransform(
+                        UnzipTransform.class,
+                        transform -> {
+                            transform.getFrom().attribute(ARTIFACT_TYPE_ATTRIBUTE, ZIP_TYPE);
+                            transform.getTo().attribute(ARTIFACT_TYPE_ATTRIBUTE, DIRECTORY_TYPE);
+                        });
 
-        project.getDependencies().registerTransform(UnzipTransform.class, transform -> {
-            transform.getFrom().attribute(ARTIFACT_TYPE_ATTRIBUTE, JAR_TYPE);
-            transform.getTo().attribute(ARTIFACT_TYPE_ATTRIBUTE, DIRECTORY_TYPE);
-         });
+        project
+                .getDependencies()
+                .registerTransform(
+                        UnzipTransform.class,
+                        transform -> {
+                            transform.getFrom().attribute(ARTIFACT_TYPE_ATTRIBUTE, JAR_TYPE);
+                            transform.getTo().attribute(ARTIFACT_TYPE_ATTRIBUTE, DIRECTORY_TYPE);
+                        });
 
         project.getExtensions().create("wpilibTools", WpilibToolsExtension.class, project);
     }

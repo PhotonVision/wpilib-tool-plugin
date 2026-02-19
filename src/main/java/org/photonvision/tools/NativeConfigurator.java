@@ -18,8 +18,14 @@ public class NativeConfigurator {
     }
 
     public Dependency wpilibOpenCv(String frcYear, String version) {
-        return handler.create("edu.wpi.first.thirdparty." + frcYear + ".opencv:opencv-cpp:" + version + ":"
-                + platformMapper.getWpilibClassifier() + "@zip");
+        return handler.create(
+                "edu.wpi.first.thirdparty."
+                        + frcYear
+                        + ".opencv:opencv-cpp:"
+                        + version
+                        + ":"
+                        + platformMapper.getWpilibClassifier()
+                        + "@zip");
     }
 
     public Dependency wpilibJava(String name) {
@@ -31,8 +37,16 @@ public class NativeConfigurator {
     }
 
     public Dependency wpilib(String name, String version) {
-        return handler.create("edu.wpi.first." + name + ":" + name + "-cpp:" + version + ":"
-                + platformMapper.getWpilibClassifier() + "@zip");
+        return handler.create(
+                "edu.wpi.first."
+                        + name
+                        + ":"
+                        + name
+                        + "-cpp:"
+                        + version
+                        + ":"
+                        + platformMapper.getWpilibClassifier()
+                        + "@zip");
     }
 
     public Dependency wpilib(String name) {
@@ -40,8 +54,12 @@ public class NativeConfigurator {
     }
 
     public Dependency cscore(String version) {
-        return handler.create("edu.wpi.first.cscore:cscore-jnicvstatic:" + version + ":"
-                + platformMapper.getWpilibClassifier() + "@zip");
+        return handler.create(
+                "edu.wpi.first.cscore:cscore-jnicvstatic:"
+                        + version
+                        + ":"
+                        + platformMapper.getWpilibClassifier()
+                        + "@zip");
     }
 
     public Dependency cscore() {

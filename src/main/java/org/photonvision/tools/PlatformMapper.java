@@ -1,7 +1,6 @@
 package org.photonvision.tools;
 
 import javax.inject.Inject;
-
 import org.gradle.api.Project;
 
 public class PlatformMapper {

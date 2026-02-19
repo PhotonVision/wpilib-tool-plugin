@@ -12,7 +12,6 @@ public enum NativePlatforms {
     LINUXARM32("linuxarm32"),
     LINUXATHENA("linuxathena");
 
-
     private final String platformName;
 
     public String getPlatformName() {
