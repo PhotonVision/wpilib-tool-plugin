@@ -3,6 +3,17 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-java@v5
+      with:
+        java-version: 17
+        distribution: 'temurin'
+    - name: Check for changes
+      run: ./gradlew spotlessCheck
+
   build:
     strategy:
       matrix:
