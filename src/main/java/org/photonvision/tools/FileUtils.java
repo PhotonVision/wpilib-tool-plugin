@@ -55,12 +55,13 @@ public class FileUtils {
         return copyLarge(input, output, new byte[bufferSize]);
     }
 
-    public static long copyLarge(final InputStream input, final OutputStream output) throws IOException {
+    public static long copyLarge(final InputStream input, final OutputStream output)
+            throws IOException {
         return copy(input, output, DEFAULT_BUFFER_SIZE);
     }
 
-    public static long copyLarge(final InputStream input, final OutputStream output, final byte[] buffer)
-            throws IOException {
+    public static long copyLarge(
+            final InputStream input, final OutputStream output, final byte[] buffer) throws IOException {
         long count = 0;
         if (input != null) {
             int n;
@@ -71,5 +72,4 @@ public class FileUtils {
         }
         return count;
     }
-
 }

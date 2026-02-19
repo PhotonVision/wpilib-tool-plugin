@@ -7,9 +7,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-
 import javax.inject.Inject;
-
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.artifacts.ArtifactView;
@@ -33,9 +31,9 @@ public class ExtractConfiguration extends DefaultTask {
 
         @Override
         public void execute(AttributeContainer attribute) {
-            attribute.attribute(ArtifactTypeDefinition.ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.DIRECTORY_TYPE);
+            attribute.attribute(
+                    ArtifactTypeDefinition.ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.DIRECTORY_TYPE);
         }
-
     }
 
     private class ArtifactViewAction implements Action<ViewConfiguration> {
@@ -95,17 +93,19 @@ public class ExtractConfiguration extends DefaultTask {
     @TaskAction
     public void execute() throws IOException {
 
-        getProject().sync(spec -> {
-            spec.into(outputDirectory);
-            spec.from(configurations);
+        getProject()
+                .sync(
+                        spec -> {
+                            spec.into(outputDirectory);
+                            spec.from(configurations);
 
-            spec.include("**/*.so");
-            spec.include("**/*.so.*");
-            spec.include("**/*.dll");
-            spec.include("**/*.dylib");
+                            spec.include("**/*.so");
+                            spec.include("**/*.so.*");
+                            spec.include("**/*.dll");
+                            spec.include("**/*.dylib");
 
-            spec.exclude("**/*.so.debug");
-        });
+                            spec.exclude("**/*.so.debug");
+                        });
 
         var versionFile = versionsFile.get().getAsFile();
         List<String> versions = new ArrayList<>();
@@ -117,7 +117,11 @@ public class ExtractConfiguration extends DefaultTask {
             }
         }
 
-        Files.write(versionFile.toPath(), versions, Charset.defaultCharset(), StandardOpenOption.CREATE,
+        Files.write(
+                versionFile.toPath(),
+                versions,
+                Charset.defaultCharset(),
+                StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING);
     }
 }

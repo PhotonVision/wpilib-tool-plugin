@@ -1,13 +1,10 @@
 package org.photonvision.tools;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.ArrayList;
-
 import javax.inject.Inject;
-
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
@@ -45,19 +42,20 @@ public class FixupNativeResources extends DefaultTask {
     public void execute() {
         Project project = getProject();
 
-        getProject().sync(new Action<SyncSpec>() {
+        getProject()
+                .sync(
+                        new Action<SyncSpec>() {
 
-            @Override
-            public void execute(SyncSpec copySpec) {
-                copySpec.from(inputDirectory);
-                copySpec.into(outputDirectory);
-            }
-
-        });
+                            @Override
+                            public void execute(SyncSpec copySpec) {
+                                copySpec.from(inputDirectory);
+                                copySpec.into(outputDirectory);
+                            }
+                        });
 
         if (OperatingSystem.current().isLinux()) {
-            NativePlatforms currentPlat = getProject().getExtensions().getByType(WpilibToolsExtension.class)
-                    .getCurrentPlatform();
+            NativePlatforms currentPlat =
+                    getProject().getExtensions().getByType(WpilibToolsExtension.class).getCurrentPlatform();
             String stripCommand = "strip";
             if (currentPlat.equals(NativePlatforms.LINUXARM32)) {
                 String localStripCommand = "armv6-bullseye-linux-gnueabihf-strip";
@@ -87,9 +85,13 @@ public class FixupNativeResources extends DefaultTask {
                 if (!file.isFile()) {
                     continue;
                 }
-                project.getProviders()
-                        .exec(ex -> ex.commandLine(fStripCommand, "--strip-all", "--discard-all", file.toString()))
-                        .getResult().get();
+                project
+                        .getProviders()
+                        .exec(
+                                ex ->
+                                        ex.commandLine(fStripCommand, "--strip-all", "--discard-all", file.toString()))
+                        .getResult()
+                        .get();
             }
         }
 
@@ -105,11 +107,15 @@ public class FixupNativeResources extends DefaultTask {
                 }
 
                 // Strip binaries
-                project.getProviders().exec(ex -> ex.commandLine("strip", "-x", "-S", file.toString())).getResult()
+                project
+                        .getProviders()
+                        .exec(ex -> ex.commandLine("strip", "-x", "-S", file.toString()))
+                        .getResult()
                         .get();
 
                 // Get list of all dependent binaries
-                var exec = project.getProviders().exec(ex -> ex.commandLine("otool", "-L", file.toString()));
+                var exec =
+                        project.getProviders().exec(ex -> ex.commandLine("otool", "-L", file.toString()));
 
                 filesToFixup.clear();
 
@@ -144,18 +150,28 @@ public class FixupNativeResources extends DefaultTask {
                         outputName = outputName.substring("@rpath/".length());
                     }
                     String outputNameFinal = outputName;
-                    project.getProviders()
-                            .exec(ex -> ex.commandLine("install_name_tool", "-change", fixupFile,
-                                    "@loader_path/" + outputNameFinal, file.toString()))
-                            .getResult().get();
+                    project
+                            .getProviders()
+                            .exec(
+                                    ex ->
+                                            ex.commandLine(
+                                                    "install_name_tool",
+                                                    "-change",
+                                                    fixupFile,
+                                                    "@loader_path/" + outputNameFinal,
+                                                    file.toString()))
+                            .getResult()
+                            .get();
                 }
 
                 // Overwrite signature because they were invalidated by strip and
                 // install-name-tool.
-                project.getProviders().exec(ex -> ex.commandLine("codesign", "--force", "--sign", "-", file.toString()))
-                        .getResult().get();
+                project
+                        .getProviders()
+                        .exec(ex -> ex.commandLine("codesign", "--force", "--sign", "-", file.toString()))
+                        .getResult()
+                        .get();
             }
         }
     }
-
 }
