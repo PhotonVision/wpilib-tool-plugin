@@ -1,21 +1,21 @@
 package org.photonvision.tools;
 
+import com.google.gson.GsonBuilder;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HexFormat;
 import java.util.Map;
-
 import javax.inject.Inject;
-
-import com.google.gson.GsonBuilder;
-
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.Directory;
 import org.gradle.api.file.DirectoryProperty;
@@ -27,7 +27,7 @@ import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 
 public class HashNativeResources extends DefaultTask {
-    
+
     /** Represents the architecture-specific information containing file hashes. */
     public record ArchInfo(Map<String, String> fileHashes) {}
 
@@ -74,9 +74,6 @@ public class HashNativeResources extends DefaultTask {
 
         Map<String, PlatformInfo> platforms = new HashMap<>();
 
-        byte[] buffer = new byte[0xFFFF];
-        int readBytes = 0;
-
         for (File file : directory.getAsFileTree()) {
             if (!file.isFile()) {
                 continue;
@@ -86,11 +83,11 @@ public class HashNativeResources extends DefaultTask {
 
             // Compute individual file hash
             MessageDigest fileHash = MessageDigest.getInstance("MD5");
-            try (FileInputStream is = new FileInputStream(file)) {
-                while ((readBytes = is.read(buffer)) != -1) {
-                    fileHash.update(buffer, 0, readBytes);
-                    combinedHash.update(buffer, 0, readBytes);
-                }
+            try (var dis =
+                    new DigestInputStream(
+                            new DigestInputStream(new BufferedInputStream(new FileInputStream(file)), fileHash),
+                            combinedHash)) {
+                dis.transferTo(OutputStream.nullOutputStream());
             }
 
             String platform = path.getName(0).toString();
