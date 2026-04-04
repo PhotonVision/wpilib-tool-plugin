@@ -33,12 +33,12 @@ public class NativeConfigurator {
     }
 
     public Dependency wpilibJava(String name, String version) {
-        return handler.create("edu.wpi.first." + name + ":" + name + "-java:" + version);
+        return handler.create("org.wpilib." + name + ":" + name + "-java:" + version);
     }
 
     public Dependency wpilib(String name, String version) {
         return handler.create(
-                "edu.wpi.first."
+                "org.wpilib."
                         + name
                         + ":"
                         + name
@@ -55,7 +55,7 @@ public class NativeConfigurator {
 
     public Dependency cscore(String version) {
         return handler.create(
-                "edu.wpi.first.cscore:cscore-jnicvstatic:"
+                "org.wpilib.cscore:cscore-jnicvstatic:"
                         + version
                         + ":"
                         + platformMapper.getWpilibClassifier()
