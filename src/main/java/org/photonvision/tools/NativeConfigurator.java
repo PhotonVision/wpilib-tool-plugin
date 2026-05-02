@@ -13,15 +13,13 @@ public class NativeConfigurator {
         this.handler = handler;
     }
 
-    public Dependency wpilibOpenCvJava(String frcYear, String version) {
-        return handler.create("org.wpilib." + frcYear + ".opencv:opencv-java:" + version);
+    public Dependency wpilibOpenCvJava(String version) {
+        return handler.create("org.wpilib.thirdparty.opencv:opencv-java:" + version);
     }
 
-    public Dependency wpilibOpenCv(String frcYear, String version) {
+    public Dependency wpilibOpenCv(String version) {
         return handler.create(
-                "org.wpilib."
-                        + frcYear
-                        + ".opencv:opencv-cpp:"
+                "org.wpilib.thirdparty.opencv:opencv-cpp:"
                         + version
                         + ":"
                         + platformMapper.getWpilibClassifier()
