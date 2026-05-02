@@ -14,12 +14,12 @@ public class NativeConfigurator {
     }
 
     public Dependency wpilibOpenCvJava(String frcYear, String version) {
-        return handler.create("edu.wpi.first.thirdparty." + frcYear + ".opencv:opencv-java:" + version);
+        return handler.create("org.wpilib." + frcYear + ".opencv:opencv-java:" + version);
     }
 
     public Dependency wpilibOpenCv(String frcYear, String version) {
         return handler.create(
-                "edu.wpi.first.thirdparty."
+                "org.wpilib."
                         + frcYear
                         + ".opencv:opencv-cpp:"
                         + version
