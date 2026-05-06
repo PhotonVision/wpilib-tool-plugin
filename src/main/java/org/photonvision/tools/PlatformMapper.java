@@ -43,7 +43,7 @@ public class PlatformMapper {
         String arch = "";
 
         if (osArch.contains("x86_64") || osArch.contains("amd64")) {
-            arch = "x64";
+            arch = "x86-64";
         } else if (osArch.contains("x86")) {
             arch = "x32";
         } else if (osArch.contains("arm64") || osArch.contains("aarch64")) {

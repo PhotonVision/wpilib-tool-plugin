@@ -1,0 +1,3 @@
+plugins {
+    id "org.photonvision.tools.WpilibTools" version "4.1.1-photon"
+}
