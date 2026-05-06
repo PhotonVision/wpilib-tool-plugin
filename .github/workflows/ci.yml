@@ -37,6 +37,7 @@ jobs:
       matrix:
          arch: ["winx64-64", "winarm64", "linuxarm32", "linuxarm64", "linuxx86-64", "macx64-64", "macarm64"]
     runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v6
     - uses: actions/setup-java@v5
       with:
@@ -45,8 +46,7 @@ jobs:
     - name: Publish to maven local
       run: ./gradlew publishToMavenLocal
     - name: Test project
-      working-dir: test_proj
-      run: ../gradlew build -PArchOverride=${{ matrix.arch }}
+      run: cd test_proj && ../gradlew build -PArchOverride=${{ matrix.arch }}
 
   publish:
     needs: build
