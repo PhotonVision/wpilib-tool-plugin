@@ -65,7 +65,7 @@ tasks.named('pluginUnderTestMetadata') {
 }
 
 wrapper {
-    gradleVersion = '8.14.3'
+    gradleVersion = '9.4.0'
 }
 
 spotless {
