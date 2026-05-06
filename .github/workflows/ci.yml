@@ -35,7 +35,7 @@ jobs:
   test:
     strategy:
       matrix:
-         arch: ["winx64-64", "winarm64", "linuxarm32", "linuxarm64", "linuxx86-64", "macx64-64", "macarm64"]
+         arch: ["winx86-64", "winarm64", "linuxarm32", "linuxarm64", "linuxx86-64", "macx86-64", "macarm64"]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
