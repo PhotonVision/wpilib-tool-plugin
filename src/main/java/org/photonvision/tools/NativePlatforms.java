@@ -7,7 +7,7 @@ public enum NativePlatforms {
     WINARM64("winarm64"),
     MAC64("macx64"),
     MACARM64("macarm64"),
-    LINUX64("linuxx64"),
+    LINUX64("linuxx86-64"),
     LINUXARM64("linuxarm64"),
     LINUXARM32("linuxarm32"),
     LINUXATHENA("linuxathena");
