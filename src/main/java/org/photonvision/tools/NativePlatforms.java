@@ -3,9 +3,9 @@ package org.photonvision.tools;
 import java.util.NoSuchElementException;
 
 public enum NativePlatforms {
-    WIN64("winx64"),
+    WIN64("winx86-64"),
     WINARM64("winarm64"),
-    MAC64("macx64"),
+    MAC64("macx86-64"),
     MACARM64("macarm64"),
     LINUX64("linuxx86-64"),
     LINUXARM64("linuxarm64"),
