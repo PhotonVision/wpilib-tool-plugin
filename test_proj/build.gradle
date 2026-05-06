@@ -1,0 +1,3 @@
+plugins {
+  id "org.wpilib.repositories.WPILibRepositoriesPlugin" version "4.1.1-photon"
+}
