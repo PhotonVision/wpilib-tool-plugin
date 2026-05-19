@@ -8,11 +8,11 @@ plugins {
 }
 
 group 'org.photonvision'
-version '4.1.1-photon'
 
-if (project.hasProperty('publishVersion')) {
-    version = project.publishVersion
-}
+apply from: "versioningHelper.gradle"
+
+
+version = versionString
 
 repositories {
     mavenCentral()
@@ -57,6 +57,10 @@ tasks.withType(Javadoc) {
 tasks.withType(JavaCompile) {
     options.compilerArgs << '-Xlint:unchecked'
     options.deprecation = true
+}
+
+tasks.named('processResources') {
+    from('versioningHelper.gradle')
 }
 
 tasks.named('pluginUnderTestMetadata') {
