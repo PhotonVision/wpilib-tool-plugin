@@ -112,9 +112,11 @@ public class WpilibToolsExtension {
                                 "assembleNativeResources" + newConfig.taskPostfix, AssembleNativeResources.class);
         retSet.assemble.configure(
                 c -> {
-                    c.from(retSet.fixup.get());
-                    c.from(retSet.hash.get());
-                    c.into(newConfig.rootTaskFolder.dir("AssembledResources"));
+                    c.dependsOn(retSet.fixup);
+                    c.dependsOn(retSet.hash);
+                    c.getInputFiles().from(retSet.fixup);
+                    c.getInputFiles().from(retSet.hash);
+                    c.getOutputDirectory().set(newConfig.rootTaskFolder.dir("AssembledResources"));
                 });
         return retSet;
     }

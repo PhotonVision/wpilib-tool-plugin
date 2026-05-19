@@ -39,7 +39,8 @@ public class WpilibTools implements Plugin<Project> {
     }
 
     private void applyVersioningHelper(Project project) {
-        URL helperScriptUrl = WpilibTools.class.getClassLoader().getResource(VERSIONING_HELPER_RESOURCE);
+        URL helperScriptUrl =
+                WpilibTools.class.getClassLoader().getResource(VERSIONING_HELPER_RESOURCE);
         if (helperScriptUrl == null) {
             project.getLogger().warn("Unable to find {} in plugin resources", VERSIONING_HELPER_RESOURCE);
             return;
