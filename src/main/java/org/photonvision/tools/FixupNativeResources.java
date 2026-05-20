@@ -14,13 +14,18 @@ import org.gradle.api.file.SyncSpec;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.internal.os.OperatingSystem;
+import org.gradle.work.DisableCachingByDefault;
 
+@DisableCachingByDefault(because = "Copying doesn't need caching")
 public class FixupNativeResources extends DefaultTask {
     private DirectoryProperty inputDirectory;
     private DirectoryProperty outputDirectory;
 
+    @PathSensitive(PathSensitivity.RELATIVE)
     @InputDirectory
     public DirectoryProperty getInputDirectory() {
         return inputDirectory;

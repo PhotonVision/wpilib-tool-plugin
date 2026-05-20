@@ -7,8 +7,12 @@ import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.work.DisableCachingByDefault;
 
+@DisableCachingByDefault(because = "Caching isn't necessary for copy tasks")
 public class AssembleNativeResources extends DefaultTask {
     private final ConfigurableFileCollection inputFiles;
     private final DirectoryProperty outputDirectory;
@@ -21,6 +25,7 @@ public class AssembleNativeResources extends DefaultTask {
     }
 
     @InputFiles
+    @PathSensitive(PathSensitivity.RELATIVE)
     public ConfigurableFileCollection getInputFiles() {
         return inputFiles;
     }

@@ -25,8 +25,12 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputFile;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.work.DisableCachingByDefault;
 
+@DisableCachingByDefault(because = "Hashing is fast and not worth caching")
 public class HashNativeResources extends DefaultTask {
 
     /**
@@ -54,6 +58,7 @@ public class HashNativeResources extends DefaultTask {
     private final RegularFileProperty hashFile;
     private final RegularFileProperty versionsInput;
 
+    @PathSensitive(PathSensitivity.RELATIVE)
     @InputDirectory
     public DirectoryProperty getInputDirectory() {
         return inputDirectory;
@@ -64,6 +69,7 @@ public class HashNativeResources extends DefaultTask {
         return hashFile;
     }
 
+    @PathSensitive(PathSensitivity.RELATIVE)
     @InputFile
     public RegularFileProperty getVersionsInput() {
         return versionsInput;
