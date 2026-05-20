@@ -22,8 +22,12 @@ import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.OutputFile;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.work.DisableCachingByDefault;
 
+@DisableCachingByDefault(because = "Copying doesn't need caching")
 public class ExtractConfiguration extends DefaultTask {
     private final ArtifactViewAction viewAction = new ArtifactViewAction();
 
@@ -57,6 +61,7 @@ public class ExtractConfiguration extends DefaultTask {
     }
 
     @InputFiles
+    @PathSensitive(PathSensitivity.RELATIVE)
     public ConfigurableFileCollection getConfigurationFiles() {
         return configurations;
     }

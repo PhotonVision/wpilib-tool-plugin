@@ -13,6 +13,8 @@ import org.gradle.api.artifacts.transform.TransformOutputs;
 import org.gradle.api.artifacts.transform.TransformParameters;
 import org.gradle.api.file.FileSystemLocation;
 import org.gradle.api.provider.Provider;
+import org.gradle.api.tasks.PathSensitive;
+import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.internal.UncheckedException;
 
 /**
@@ -24,6 +26,7 @@ public interface UnzipTransform extends TransformAction<TransformParameters.None
 
     // TODO see if we can get incremental to work
 
+    @PathSensitive(PathSensitivity.RELATIVE)
     @InputArtifact
     Provider<FileSystemLocation> getZippedFile();
 
