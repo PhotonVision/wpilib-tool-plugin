@@ -34,8 +34,8 @@ ext.writePhotonVersionFile = {File versionFileIn, Path path, String version ->
             .replace('${version}', version)
             .replace('${date}', date)
             .replace('${wpilibVersion}', wpilibVersion)
-            // Note that OpenCV is usually {VERSION}-{some suffix}, we just want the first bit
-            .replace('${opencvVersion}', openCVversion.split("-").first())
+            // Note that OpenCV is usually {VERSION}-{some suffix}, we want everything after the first dash
+            .replace('${opencvVersion}', openCVversion.substring(openCVversion.indexOf("-") + 1))
     if (!versionFileOut.parentFile.exists()) versionFileOut.parentFile.mkdirs()
     if (!versionFileOut.exists()) versionFileOut.createNewFile()
     versionFileOut.write(read)
