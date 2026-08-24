@@ -58,48 +58,6 @@ public class FixupNativeResources extends DefaultTask {
                             }
                         });
 
-        if (OperatingSystem.current().isLinux()) {
-            NativePlatforms currentPlat =
-                    getProject().getExtensions().getByType(WpilibToolsExtension.class).getCurrentPlatform();
-            String stripCommand = "strip";
-            if (currentPlat.equals(NativePlatforms.LINUXARM32)) {
-                String localStripCommand = "armv6-bullseye-linux-gnueabihf-strip";
-                try {
-                    project.getProviders().exec(ex -> ex.commandLine(localStripCommand)).getResult().get();
-                } catch (Exception ex) {
-                    getLogger().warn("Strip for arm32 was not found. Skipping");
-                    return;
-                }
-                stripCommand = localStripCommand;
-            } else if (currentPlat.equals(NativePlatforms.LINUXARM64)) {
-                String localStripCommand = "aarch64-bullseye-linux-gnu-strip";
-                try {
-                    project.getProviders().exec(ex -> ex.commandLine(localStripCommand)).getResult().get();
-                } catch (Exception ex) {
-                    getLogger().warn("Strip for arm64 was not found. Skipping");
-                    return;
-                }
-                stripCommand = localStripCommand;
-            }
-
-            String fStripCommand = stripCommand;
-
-            // Strip all binaries
-            Directory directory = outputDirectory.get();
-            for (File file : directory.getAsFileTree()) {
-                if (!file.isFile()) {
-                    continue;
-                }
-                project
-                        .getProviders()
-                        .exec(
-                                ex ->
-                                        ex.commandLine(fStripCommand, "--strip-all", "--discard-all", file.toString()))
-                        .getResult()
-                        .get();
-            }
-        }
-
         if (OperatingSystem.current().isMacOsX()) {
             // Set rpath correctly in all binaries
             Directory directory = outputDirectory.get();
