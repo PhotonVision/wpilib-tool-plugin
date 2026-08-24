@@ -8,6 +8,7 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.Sync;
 import org.gradle.api.tasks.TaskProvider;
 
 public class WpilibToolsExtension {
@@ -45,7 +46,7 @@ public class WpilibToolsExtension {
         public TaskProvider<ExtractConfiguration> extractConfiguration;
         public TaskProvider<FixupNativeResources> fixup;
         public TaskProvider<HashNativeResources> hash;
-        public TaskProvider<AssembleNativeResources> assemble;
+        public TaskProvider<Sync> assemble;
 
         public void addToSourceSetResources(SourceSet sourceSet) {
             Map<String, Object> map = new HashMap<>();
@@ -106,17 +107,14 @@ public class WpilibToolsExtension {
                 });
 
         retSet.assemble =
-                project
-                        .getTasks()
-                        .register(
-                                "assembleNativeResources" + newConfig.taskPostfix, AssembleNativeResources.class);
+                project.getTasks().register("assembleNativeResources" + newConfig.taskPostfix, Sync.class);
         retSet.assemble.configure(
                 c -> {
                     c.dependsOn(retSet.fixup);
                     c.dependsOn(retSet.hash);
-                    c.getInputFiles().from(retSet.fixup);
-                    c.getInputFiles().from(retSet.hash);
-                    c.getOutputDirectory().set(newConfig.rootTaskFolder.dir("AssembledResources"));
+                    c.from(retSet.fixup);
+                    c.from(retSet.hash);
+                    c.into(newConfig.rootTaskFolder.dir("AssembledResources"));
                 });
         return retSet;
     }
