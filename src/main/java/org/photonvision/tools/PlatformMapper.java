@@ -58,11 +58,6 @@ public class PlatformMapper {
         return currentPlatform;
     }
 
-    public boolean isPlatformArm() {
-        NativePlatforms platform = getCurrentPlatform();
-        return platform == NativePlatforms.LINUXARM64 || platform == NativePlatforms.LINUXARM32;
-    }
-
     public String getWpilibClassifier() {
         NativePlatforms platform = getCurrentPlatform();
         return switch (platform) {

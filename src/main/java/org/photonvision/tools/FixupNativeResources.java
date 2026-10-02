@@ -12,19 +12,26 @@ import org.gradle.api.file.Directory;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.SyncSpec;
 import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.internal.os.OperatingSystem;
 import org.gradle.work.DisableCachingByDefault;
 
 @DisableCachingByDefault(because = "Copying doesn't need caching")
 public class FixupNativeResources extends DefaultTask {
+    private Property<NativePlatforms> nativePlatform;
     private DirectoryProperty inputDirectory;
     private DirectoryProperty outputDirectory;
 
+    @Input
+    public Property<NativePlatforms> getNativePlatform() {
+        return nativePlatform;
+    }
+    
     @PathSensitive(PathSensitivity.RELATIVE)
     @InputDirectory
     public DirectoryProperty getInputDirectory() {
@@ -39,6 +46,7 @@ public class FixupNativeResources extends DefaultTask {
     @Inject
     public FixupNativeResources() {
         ObjectFactory factory = getProject().getObjects();
+        nativePlatform = factory.property(NativePlatforms.class);
         inputDirectory = factory.directoryProperty();
         outputDirectory = factory.directoryProperty();
     }
@@ -58,7 +66,7 @@ public class FixupNativeResources extends DefaultTask {
                             }
                         });
 
-        if (OperatingSystem.current().isMacOsX()) {
+        if (nativePlatform.get().isMac()) {
             // Set rpath correctly in all binaries
             Directory directory = outputDirectory.get();
 

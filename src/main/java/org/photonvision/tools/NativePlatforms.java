@@ -30,4 +30,12 @@ public enum NativePlatforms {
         }
         throw new NoSuchElementException(platformName);
     }
+
+    public boolean isArmLinux() {
+        return this == LINUXARM64 || this == LINUXARM32;
+    }
+
+    public boolean isMac() {
+        return this == MAC64 || this == MACARM64;
+    }
 }

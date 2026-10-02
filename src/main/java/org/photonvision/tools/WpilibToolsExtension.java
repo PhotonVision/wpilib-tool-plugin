@@ -89,6 +89,7 @@ public class WpilibToolsExtension {
         retSet.fixup.configure(
                 c -> {
                     c.dependsOn(retSet.extractConfiguration);
+                    c.getNativePlatform().set(platformMapper.getCurrentPlatform());
                     c.getInputDirectory().set(retSet.extractConfiguration.get().getOutputDirectory());
                     c.getOutputDirectory().set(newConfig.rootTaskFolder.dir("RuntimeLibs"));
                 });
